@@ -6,47 +6,125 @@
 ## <a name='TOC'>Table of Contents</a>
 
   1. [General](#general)
-  1. [Naming Conventions](#objects)
+  1. [Naming Conventions](#naming)
   1. [Presentation](#arrays)
   1. [Strings](#strings)
   1. [Functions](#functions)
 
 
 ## <a name='general'>General</a>
-
-  - **Doctype**: All doctypes should adhere to HTML5 standards
-
-    + `string`
-    + `number`
-    + `boolean`
-    + `null`
-    + `undefined`
-
-    ```html
-    <!-- Good -->
-    <!DOCTYPE html>
+**Doctype:** should always follow the HTML5 standard
+```html
+<!-- Good -->
+<!DOCTYPE html>
     
-    // Bad
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-    ```
-  - **Complex**: When you access a complex type you work on a reference to its value
+<!-- Bad -->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+    
+<!-- Bad -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+```
 
-    + `object`
-    + `array`
-    + `function`
+**HTML Tag:** setup to degrade gracefully with older browsers & include language
+```html
+<!-- Bad -->
+<html class="no-js">
+    
+<!-- Bad -->
+<html>
 
-    ```javascript
-    var foo = [1, 2],
-        bar = foo;
+<!-- Good -->
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>   <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>   <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--><html class="no-js" lang="en"><!--<![endif]-->
+```
+**HTML5 Syntax:** HTML5 Syntax should be implemented as often as possible in a way that makes sense. Use your best judgement when using HTML5 tags.
 
-    bar[0] = 9;
+**Minify & Concatenate:** Our system is setup to automatically minify and concatenate both stylesheets and javascripts for production-ready code. By default however, Heisenberg is setup to not minify & concatenate to make debugging and development a bit easier. 
 
-    console.log(foo[0], bar[0]); // => 9, 9
-    ```
+**CSS & JS NEED TO BE MINIFIED AND CONCATENATED FOR PRODUCTION**
+```html
+<!-- Bad (does not minify & concat)-->
+{{ 'css' | css_minify_tag: true }}
+    
+<!-- Bad (does not minify & concat)-->
+{{ 'footer' | js_minify_tag: true }}
 
-    **[[⬆]](#TOC)**
+<!-- Good -->
+{{ 'css' | css_minify_tag: false }}
+    
+<!-- Good -->
+{{ 'footer' | js_minify_tag: false }}
+```
 
-## <a name='objects'>Objects</a>
+**ID vs CLASS:** Classes should be used at all times to ensure that markup remains modular for re-use. ID's should be used ONLY on elements that are used by Javascript, therefore, an ID should NEVER be used in a stylesheet. ID's should be used wherever possible when Javascript needs to bind to an element, to ensure a faster lookup.
+
+**DOM Tree:** The DOM size should be kept as small as possible. Having duplicate markup that may render different depending on device size is not acceptable. To help be as effecient as possible, try planning for mobile first, and scaling to desktop from there.
+
+The common practice of hiding & showing content based on device should be kept to an absolute minimum. If you're having to hide content when viewing on a mobile device, consider if this content is crucial to the site, and use your best judgement.
+
+## <a name='naming'>Naming Conventions</a>
+
+We are making a big push to build modular layouts, which allows us to re-use much of our code in different projects. By not using ID's to style elements and following other Object Oriented CSS (OOCSS) patterns, re-using code becomes as simple as copy + paste.
+
+**Resouces:**  
+[OOCSS from oocss.org](http://oocss.org/)  
+[OOCSS on Smashing Magazine](http://coding.smashingmagazine.com/2011/12/12/an-introduction-to-object-oriented-css-oocss/)  
+  
+Use the hyphen sytax, but sparingly
+```html
+<!-- Good -->
+<div class="products-container"></div>
+
+<!-- Good -->
+<div class="products-container list"></div>
+
+<!-- Bad -->
+<div class="products-list-layout"></div>
+
+<!-- Good -->
+<div class="products-container list main"></div>
+
+<!-- Bad -->
+<div class="main-products-list-container"></div>
+```
+
+Use short an descriptive class names
+```html
+<!-- Good -->
+<div class="products"></div>
+
+<!-- Good -->
+<div class="products list"></div>
+
+<!-- Good -->
+<div class="products grid"></div>
+
+<!-- Good -->
+<div class="products grid">
+    
+    <span class="image"></span>
+    <h4 class="title"></h4>
+    <span class="info"></span>
+
+</div>
+
+<!-- Bad -->
+<div class="products-list"></div>
+
+<!-- Bad -->
+<div class="products-grid-layout"></div>
+
+<!-- Bad -->
+<div class="products-grid">
+   
+   <span class="product-image"></span>
+    <h4 class="product-title"></h4>
+    <span class="product-info"></span>
+
+</div>
+```
 
   - Use the literal syntax for object creation.
 
